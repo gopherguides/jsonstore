@@ -18,3 +18,5 @@ curl -v -d '{"first":"rob"}' -H "Content-Type: application/json" http://localhos
 
 curl -v  http://localhost:9090/collections/foo/1
 ```
+
+Additional generic curl references for JSON data here: https://gist.github.com/subfuzion/08c5d85437d5d4f00e58
