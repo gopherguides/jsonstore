@@ -1,6 +1,6 @@
 # JSONStore
 
-This project is not intended for a production usage.  It's purpose is to show how to benchmark, profile, and optimize a Go services as part of a distributed system.
+This project is not intended for production usage.  It's purpose is to show how to benchmark, profile, and optimize a Go service as part of a distributed system.
 
 This repo is used in [Gopher Guides](https://www.gopherguides.com) advanced profiling and optimization class.
 
