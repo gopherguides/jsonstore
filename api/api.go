@@ -15,9 +15,10 @@ type API struct {
 	handler *Handler
 	store   *store.Store
 	srv     *http.Server
+	debug   bool
 }
 
-func New(addr string, path string) (*API, error) {
+func New(addr string, path string, debug bool) (*API, error) {
 	if err := os.MkdirAll(path, os.ModePerm); err != nil {
 		return nil, err
 	}
@@ -25,7 +26,7 @@ func New(addr string, path string) (*API, error) {
 	// Create our store instance
 	s := store.New(path, fs)
 
-	h := NewHandler()
+	h := NewHandler(debug)
 	h.Store = s
 
 	// create our server
@@ -38,6 +39,7 @@ func New(addr string, path string) (*API, error) {
 	}
 
 	return &API{
+		debug:   debug,
 		handler: h,
 		srv:     srv,
 		store:   s,

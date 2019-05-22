@@ -21,12 +21,18 @@ func main() {
 	// load any arguments
 	var path string = filepath.Join(dir, ".jsonstore")
 	var addr string = "localhost:9090"
+	var debug bool
 	flag.StringVar(&path, "path", path, "database path")
 	flag.StringVar(&addr, "addr", addr, "address to start up api service")
+	flag.BoolVar(&debug, "debug", debug, "turn on debugging")
 	flag.Parse()
 
+	if debug {
+		log.Println("debugging: on")
+	}
+
 	// Creat our API
-	a, err := api.New(addr, path)
+	a, err := api.New(addr, path, debug)
 	if err != nil {
 		log.Fatal(err)
 	}
