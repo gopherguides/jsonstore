@@ -11,6 +11,11 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# ignore json storage directory
+# Ignore binary if it's built
+cmd/jsonstore/jsonstore
+
+# ignore hidden directoryes
 .*
+
+# Don't ignore gitignore...
 !/.gitignore
