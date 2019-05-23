@@ -25,9 +25,9 @@ func NewHandler(debug bool) *Handler {
 		debug: debug,
 	}
 	m := mux.NewRouter()
-	m.HandleFunc("/collections/{collection}/{id}", h.Read).Methods("GET")
-	m.HandleFunc("/collections/{collection}/{id}", h.Create).Methods("PUT") // Update is dumb right now, just overwrites entire object
+	m.HandleFunc("/collections/{collection}/{id}", h.Update).Methods("PUT")
 	m.HandleFunc("/collections/{collection}/{id}", h.Create).Methods("POST")
+	m.HandleFunc("/collections/{collection}/{id}", h.Read).Methods("GET")
 	m.HandleFunc("/collections", h.CreateCollection).Methods("POST")
 	h.mux = m
 
@@ -82,6 +82,43 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		}
 		c = cc
 	}
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		if h.debug {
+			log.Println(err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	if h.debug {
+		log.Printf("received json: %s", string(b))
+	}
+	c.Update(id, string(b))
+	w.WriteHeader(http.StatusAccepted)
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(b)
+}
+
+func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
+	if h.debug {
+		log.Println("update document")
+	}
+
+	vars := mux.Vars(r)
+	name := vars["collection"]
+	id := vars["id"]
+	c := h.Store.Collection(name)
+	if c == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	_, ok := c.Query(id)
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+	}
+
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {

@@ -37,6 +37,9 @@ func (c *Client) Create(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode < 200 || response.StatusCode >= 300 {
+		return statusCodeError{StatusCode: resp.StatusCode}
+	}
 
 	defer resp.Body.Close()
 	return json.NewDecoder(resp.Body).Decode(v)
@@ -53,6 +56,9 @@ func (c *Client) Update(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode < 200 || response.StatusCode >= 300 {
+		return statusCodeError{StatusCode: resp.StatusCode}
+	}
 
 	defer resp.Body.Close()
 	return json.NewDecoder(resp.Body).Decode(v)
@@ -64,12 +70,20 @@ func (c *Client) Read(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode < 200 || response.StatusCode >= 300 {
+		return statusCodeError{StatusCode: resp.StatusCode}
+	}
+
 	defer resp.Body.Close()
 	return json.NewDecoder(resp.Body).Decode(v)
 }
 
 func (c *Client) Remove(id string, v interface{}) error {
 	collection := collectionName(v)
-	_, err := c.Delete(path.Join(collection, id))
+	resp, err := c.Delete(path.Join(collection, id))
+	if resp.StatusCode < 200 || response.StatusCode >= 300 {
+		return statusCodeError{StatusCode: resp.StatusCode}
+	}
+
 	return err
 }
