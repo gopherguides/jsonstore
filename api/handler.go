@@ -28,6 +28,7 @@ func NewHandler(debug bool) *Handler {
 	m.HandleFunc("/collections/{collection}/{id}", h.Update).Methods("PUT")
 	m.HandleFunc("/collections/{collection}/{id}", h.Create).Methods("POST")
 	m.HandleFunc("/collections/{collection}/{id}", h.Read).Methods("GET")
+	m.HandleFunc("/collections/{collection}/{id}", h.Delete).Methods("DELETE")
 	m.HandleFunc("/collections", h.CreateCollection).Methods("POST")
 	h.mux = m
 
@@ -159,4 +160,24 @@ func (h *Handler) Read(w http.ResponseWriter, r *http.Request) {
 		log.Printf("writing out json: %s", string(doc))
 	}
 	w.Write([]byte(doc))
+}
+
+func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
+	if h.debug {
+		log.Println("delete document")
+	}
+	vars := mux.Vars(r)
+	name := vars["collection"]
+	id := vars["id"]
+	c := h.Store.Collection(name)
+	if c == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	_, ok := c.Query(id)
+	if !ok {
+		w.WriteHeader(http.StatusNotFound)
+	}
+	c.Remove(id)
+	w.WriteHeader(http.StatusOK)
 }

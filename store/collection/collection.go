@@ -45,6 +45,12 @@ func (c *Collection) Query(id string) (string, bool) {
 	return d, ok
 }
 
+func (c *Collection) Remove(id string) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	delete(c.Documents, id)
+}
+
 func (c *Collection) load() error {
 	r, err := c.storer.Reader(c.path)
 	if err != nil {
