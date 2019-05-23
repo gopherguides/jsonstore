@@ -10,7 +10,7 @@ import (
 )
 
 func collectionName(v interface{}) string {
-	s := fmt.Sprintf("%s", reflect.TypeOf(v))
+	s := strings.ToLower(fmt.Sprintf("%s", reflect.TypeOf(v)))
 	f := strings.Split(s, ".")
 	if len(f) == 0 {
 		return pluralize(s)

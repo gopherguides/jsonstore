@@ -16,6 +16,12 @@ type Foo struct {
 
 func TestRead(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if got, exp := r.URL.Path, "/collections/foos/1"; got != exp {
+			t.Fatalf("unexpected path: got %s, exp %s", got, exp)
+		}
+		if got, exp := r.Method, "GET"; got != exp {
+			t.Fatalf("unexpected method: got %s, exp %s", got, exp)
+		}
 		fmt.Fprintln(w, `{"id":1,"name":"Bar"}`)
 	}))
 	defer ts.Close()
@@ -41,6 +47,13 @@ func TestRead(t *testing.T) {
 
 func TestCreate(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// check the path is correct
+		if got, exp := r.URL.Path, "/collections/foos/1"; got != exp {
+			t.Fatalf("unexpected path: got %s, exp %s", got, exp)
+		}
+		if got, exp := r.Method, "POST"; got != exp {
+			t.Fatalf("unexpected method: got %s, exp %s", got, exp)
+		}
 		fmt.Fprintln(w, `{"id":2,"name":"Baz"}`)
 	}))
 	defer ts.Close()
