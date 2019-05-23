@@ -37,8 +37,8 @@ func (c *Client) Create(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode < 200 || response.StatusCode >= 300 {
-		return statusCodeError{StatusCode: resp.StatusCode}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return &statusCodeError{Code: resp.StatusCode}
 	}
 
 	defer resp.Body.Close()
@@ -56,8 +56,8 @@ func (c *Client) Update(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode < 200 || response.StatusCode >= 300 {
-		return statusCodeError{StatusCode: resp.StatusCode}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return &statusCodeError{Code: resp.StatusCode}
 	}
 
 	defer resp.Body.Close()
@@ -70,8 +70,8 @@ func (c *Client) Read(id string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	if resp.StatusCode < 200 || response.StatusCode >= 300 {
-		return statusCodeError{StatusCode: resp.StatusCode}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return &statusCodeError{Code: resp.StatusCode}
 	}
 
 	defer resp.Body.Close()
@@ -81,8 +81,8 @@ func (c *Client) Read(id string, v interface{}) error {
 func (c *Client) Remove(id string, v interface{}) error {
 	collection := collectionName(v)
 	resp, err := c.Delete(path.Join(collection, id))
-	if resp.StatusCode < 200 || response.StatusCode >= 300 {
-		return statusCodeError{StatusCode: resp.StatusCode}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return &statusCodeError{Code: resp.StatusCode}
 	}
 
 	return err

@@ -3,13 +3,13 @@ package client
 import "fmt"
 
 type statusCodeError struct {
-	StatusCode int
+	Code int
 }
 
-func (s *StatusCodeError) Error() string {
-	return fmt.Sprintf("status code %d", s.StatusCode)
+func (s *statusCodeError) Error() string {
+	return fmt.Sprintf("status code %d", s.Code)
 }
 
-func (s *StatusCode) StatusCode() int {
-	return s.StatusCode
+func (s *statusCodeError) StatusCode() int {
+	return s.Code
 }
