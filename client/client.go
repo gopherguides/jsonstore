@@ -40,6 +40,17 @@ func (c *Client) Post(p string, body io.Reader) (*http.Response, error) {
 	return http.Post(u.String(), "application/json", body)
 }
 
+func (c *Client) Put(p string, body io.Reader) (*http.Response, error) {
+	// copy the host
+	u := *c.host
+	u.Path = path.Join(u.Path, "collections", p)
+	req, err := http.NewRequest("PUT", u.String(), body)
+	if err != nil {
+		return nil, err
+	}
+	return http.DefaultClient.Do(req)
+}
+
 func (c *Client) Delete(p string) (*http.Response, error) {
 	u := *c.host
 	u.Path = path.Join(u.Path, "collections", p)

@@ -26,7 +26,8 @@ func NewHandler(debug bool) *Handler {
 	}
 	m := mux.NewRouter()
 	m.HandleFunc("/collections/{collection}/{id}", h.Read).Methods("GET")
-	m.HandleFunc("/collections/{collection}/{id}", h.Write).Methods("POST")
+	m.HandleFunc("/collections/{collection}/{id}", h.Create).Methods("PUT") // Update is dumb right now, just overwrites entire object
+	m.HandleFunc("/collections/{collection}/{id}", h.Create).Methods("POST")
 	m.HandleFunc("/collections", h.CreateCollection).Methods("POST")
 	h.mux = m
 
@@ -59,7 +60,7 @@ func (h *Handler) CreateCollection(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(data)
 }
 
-func (h *Handler) Write(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	if h.debug {
 		log.Println("write document")
 	}
